@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>Unity3D实现第一人称视角 - weysx</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Unity3D实现第一人称视角 - weysx" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/2023/08/19/Unity3D%E5%AE%9E%E7%8E%B0%E7%AC%AC%E4%B8%80%E4%BA%BA%E7%A7%B0%E8%A7%86%E8%A7%92/index.html" />
+  
+  <meta property="og:image" content="/img/unityfp.png" />
+  
+  <meta property="og:article:published_time" content="2023-08-18T16:00:00.000Z" />
+  
+  <meta property="og:article:author" content="weysx" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/weysx" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+
+        
+        <div class="date" id="date">
+            <span>August</span>
+            <span>19,</span>
+            <span>2023</span>
+        </div>
+        
+
+        <h1 class="title">Unity3D实现第一人称视角</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p><img src="/img/unityfp.png" alt="unityfp"></p>
+<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>第一人称视角的运用十分广泛，常见于许多FPS（First-Person Shooting第一人称射击游戏）、交互式展览、空间漫游等项目。</p>
+<h1 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h1><p>那么，这类第一人称视角是如何实现的呢？</p>
+<p>其实并不复杂，<strong>一个人物模型</strong>，<strong>一个摄像机</strong>，<strong>一个脚本</strong>，便可轻松实现。</p>
+<h2 id="1-创建人物模型"><a href="#1-创建人物模型" class="headerlink" title="1.创建人物模型"></a>1.创建人物模型</h2><p>在 Hierarchy 栏目右击随机创建一个 3D Object</p>
+<h2 id="2-调整摄像机位置"><a href="#2-调整摄像机位置" class="headerlink" title="2.调整摄像机位置"></a>2.调整摄像机位置</h2><p>将 Main Camera 拖动到创建好的 3D Object 模型下，成为它的子物体</p>
+<p>调整好摄像机在模型内部的位置，充当眼睛，（建议放在中上部），来获取周围的环境</p>
+<p>至此，一个简单的人物就做好了，有没有感到非常激动呢</p>
+<h2 id="3-编写脚本（核心部分）"><a href="#3-编写脚本（核心部分）" class="headerlink" title="3.编写脚本（核心部分）"></a>3.编写脚本（核心部分）</h2><h3 id="姿态讲解"><a href="#姿态讲解" class="headerlink" title="姿态讲解"></a>姿态讲解</h3><p><strong>第一人称视角的旋转，事实上就是摄像机(Camera)不断发生姿态改变的过程</strong></p>
+<p>物体在三维空间中姿态的改变，可以被描述为3种基本行为：<strong>俯仰(pitch)、偏转(yaw)、翻滚(roll)</strong>	<br><img src="/img/3d.png" alt="3D coordinates"></p>
+<p><strong>俯仰（pitch）：绕X轴旋转</strong>（类似于汽车上下坡）<br><strong>偏转（yaw）：绕Y轴旋转</strong>（类似于军训原地向左转、向右转）<br><strong>翻滚（roll）：绕Z轴旋转</strong>（类似于烤串）<br>*第一人称不用Z轴</p>
+<p>因此，想要完成第一视角的移动，我们得达到以下目的：<br><strong>鼠标向前移动时，进行向上的仰视</strong><br><strong>鼠标向后移动时，进行向下的俯视</strong><br><strong>鼠标向左移动时，进行向左(逆时针)的偏转</strong><br><strong>鼠标向右移动时，进行向右(顺时针)的偏转</strong></p>
+<h3 id="代码讲解"><a href="#代码讲解" class="headerlink" title="代码讲解"></a>代码讲解</h3><p>如何用代码实现呢？<br>只需三步即可：<strong>获取摄像机</strong>、<em><strong>计算转动角度</strong>、</em><em>将计算出的值赋给摄像机</em>*</p>
+<h4 id="获取摄像机"><a href="#获取摄像机" class="headerlink" title="获取摄像机"></a>获取摄像机</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Transform camera;<span class="comment">//存放相机</span></span><br></pre></td></tr></table></figure>
+<p>在 Main Camera 的 Inspector 中要将 Main Camera 绑定到对应位置</p>
+<h4 id="计算转动角度"><a href="#计算转动角度" class="headerlink" title="*计算转动角度"></a>*计算转动角度</h4><p><strong>欧拉角</strong><br>在Unity中，欧拉角（Euler Angles）用于描述物体的旋转状态，它由三个角度组成（X, Y, Z)，即俯仰角（pitch）、偏转角（yaw）和翻滚角（roll）<br>在Transform组件中，可以通过eulerAngles属性获取或设置物体的欧拉角</p>
+<p>首先设定<strong>俯仰</strong>和<strong>偏转</strong>时的鼠标灵敏度</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">float</span> mousePitchSensitivity;<span class="comment">//俯仰的鼠标灵敏度（绕X轴）</span></span><br><span class="line"><span class="keyword">public</span> <span class="built_in">float</span> mouseYawSensitivity;<span class="comment">//偏转的鼠标灵敏度（绕Y轴）</span></span><br></pre></td></tr></table></figure>
+<p>设定俯仰的最大角度（一般人抬头是不能看到后面的，除非你能下腰…）</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">float</span> pitchLimit = <span class="number">75</span>;<span class="comment">//俯仰的最大角度</span></span><br></pre></td></tr></table></figure>
+
+<p>通过<br>    * <strong>最终角度（AfterRot）&#x3D;当前角度（localEulerAngles）+变化角度（Rot）</strong><br> 进行计算</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">float</span> pitch = -Input.GetAxis(<span class="string">&quot;Mouse Y&quot;</span>)*mousePitchSensitivity;<span class="comment">//当前帧的俯仰值（变化的量）</span></span><br><span class="line"><span class="built_in">float</span> yaw = Input.GetAxis(<span class="string">&quot;Mouse X&quot;</span>)*mouseYawSensitivity;<span class="comment">//当前帧的偏转值（变化的量）</span></span><br><span class="line"></span><br><span class="line">Vector3 rot = <span class="keyword">new</span> Vector3(pitch, yaw, <span class="number">0</span>);<span class="comment">//当前帧欧拉角发生的改变量</span></span><br><span class="line"></span><br><span class="line">Vector3 afterRot;<span class="comment">//改变后的欧拉角</span></span><br><span class="line">afterRot.x = Mathf.Clamp(ClampAngle(camera.localEulerAngles.x) + rot.x, -pitchLimit, pitchLimit);</span><br><span class="line">afterRot.y = camera.transform.localEulerAngles.y + rot.y;</span><br><span class="line">afterRot.z = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里用到了一个 ClampAngle 函数，用于限制角度于（-180，180）之间<br>因为在访问物体欧拉角x&#x2F;y&#x2F;z数值时，Unity返回的读出值具有周期上的随机性（例如对于俯仰角x &#x3D; 0，Transform.EulerAngle.x的读出值可能是-360，0，360中的一个）所以以此来避免</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将角度限制在（-180，180）</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">float</span> <span class="title">ClampAngle</span>(<span class="params"><span class="built_in">float</span> angle</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ( angle&lt;=<span class="number">180</span> &amp;&amp; angle&gt;=<span class="number">-180</span>) <span class="keyword">return</span> angle;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (angle&gt;<span class="number">180</span>) angle-=<span class="number">360</span>;</span><br><span class="line">    <span class="keyword">else</span> angle +=<span class="number">360</span>;</span><br><span class="line">    <span class="keyword">return</span> angle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="附值给摄像机"><a href="#附值给摄像机" class="headerlink" title="附值给摄像机"></a>附值给摄像机</h4><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera.localEulerAngles = afterRot;<span class="comment">//将最终的欧拉角赋给摄像机</span></span><br></pre></td></tr></table></figure>
+<p>最后将脚本挂载在 Main Camera 上 这样第一视角便可以实现了</p>
+<h1 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Diagnostics.Tracing;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LookControl</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Transform camera;<span class="comment">//存放相机</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">float</span> mousePitchSensitivity;<span class="comment">//俯仰的鼠标灵敏度（绕X轴）</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">float</span> mouseYawSensitivity;<span class="comment">//偏转的鼠标灵敏度（绕Y轴）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">float</span> pitchLimit = <span class="number">75</span>;<span class="comment">//俯仰的最大角度</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//将角度限制在（-180，180）</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">float</span> <span class="title">ClampAngle</span>(<span class="params"><span class="built_in">float</span> angle</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (angle&lt;=<span class="number">180</span> &amp;&amp; angle&gt;=<span class="number">-180</span>) <span class="keyword">return</span> angle;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (angle&gt;<span class="number">180</span>) angle-=<span class="number">360</span>;</span><br><span class="line">        <span class="keyword">else</span> angle +=<span class="number">360</span>;</span><br><span class="line">        <span class="keyword">return</span> angle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Cursor.lockState=CursorLockMode.Locked;<span class="comment">//将鼠标光标锁定在窗口中心</span></span><br><span class="line">        Cursor.visible = <span class="literal">false</span>;<span class="comment">//隐藏鼠标光标</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">float</span> pitch = -Input.GetAxis(<span class="string">&quot;Mouse Y&quot;</span>)*mousePitchSensitivity;<span class="comment">//当前帧的俯仰值（变化的量）</span></span><br><span class="line">        <span class="built_in">float</span> yaw = Input.GetAxis(<span class="string">&quot;Mouse X&quot;</span>)*mouseYawSensitivity;<span class="comment">//当前帧的偏转值（变化的量）</span></span><br><span class="line"></span><br><span class="line">        Vector3 rot = <span class="keyword">new</span> Vector3(pitch, yaw, <span class="number">0</span>);<span class="comment">//当前帧欧拉角发生的改变量</span></span><br><span class="line"></span><br><span class="line">        Vector3 afterRot;<span class="comment">//改变后的欧拉角</span></span><br><span class="line">        afterRot.x = Mathf.Clamp(ClampAngle(camera.localEulerAngles.x) + rot.x, -pitchLimit, pitchLimit);</span><br><span class="line">        afterRot.y = camera.transform.localEulerAngles.y + rot.y;</span><br><span class="line">        afterRot.z = <span class="number">0</span>;</span><br><span class="line">        camera.localEulerAngles = afterRot;<span class="comment">//将最终的欧拉角赋给摄像机</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by weysx, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        
+        <a href="/2024/04/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">计算机图形学前置知识</h3>
+                </div>
+            </div>
+        </a>
+        
+        <a class="prev"></a>
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/about" class="item">About</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/weysx" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_73241844?spm=1000.2115.3001.5343" class="item">CSDN</a>
+                
+                <a href="mailto:weysx@qq.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2024 weysx<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
