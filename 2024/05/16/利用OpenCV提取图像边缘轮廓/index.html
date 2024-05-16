@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  
+  <title>利用OpenCV提取图像边缘轮廓 - weysx</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="利用OpenCV提取图像边缘轮廓 - weysx" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://example.com/2024/05/16/%E5%88%A9%E7%94%A8OpenCV%E6%8F%90%E5%8F%96%E5%9B%BE%E5%83%8F%E8%BE%B9%E7%BC%98%E8%BD%AE%E5%BB%93/index.html" />
+  
+  <meta property="og:image" content="/img/carEdgeDetection.jpg" />
+  
+  <meta property="og:article:published_time" content="2024-05-15T16:00:00.000Z" />
+  
+  <meta property="og:article:author" content="weysx" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/weysx" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+
+        
+        <div class="date" id="date">
+            <span>May</span>
+            <span>16,</span>
+            <span>2024</span>
+        </div>
+        
+
+        <h1 class="title">利用OpenCV提取图像边缘轮廓</h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="利用OpenCV提取图像边缘轮廓"><a href="#利用OpenCV提取图像边缘轮廓" class="headerlink" title="利用OpenCV提取图像边缘轮廓"></a>利用OpenCV提取图像边缘轮廓</h1><p><img src="/img/houseEdgeDetection.JPG" alt="AIGC"></p>
+<p><strong>导入库与图像</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line">img = cv2.imread(<span class="string">&#x27;路径&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-降低图像复杂度"><a href="#1-降低图像复杂度" class="headerlink" title="1.降低图像复杂度"></a>1.降低图像复杂度</h2><h4 id="转灰度图像"><a href="#转灰度图像" class="headerlink" title="转灰度图像"></a>转灰度图像</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gray_img = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-去噪"><a href="#2-去噪" class="headerlink" title="2.去噪"></a>2.去噪</h2><h4 id="高斯模糊"><a href="#高斯模糊" class="headerlink" title="高斯模糊"></a>高斯模糊</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gauss_img = cv2.GaussianBlur(gray_img,(<span class="number">3</span>,<span class="number">3</span>),<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">//（ ，）为高斯核大小ksize，只能为正奇数，宽度和高度越大越模糊</span><br></pre></td></tr></table></figure>
+<h4 id="中值滤波"><a href="#中值滤波" class="headerlink" title="中值滤波"></a>中值滤波</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">median_img= cv2.medianBlur(gauss_img,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">//<span class="number">3</span>:ksize为内核大小，越大滤波效果越强，去噪更明显</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="3-二值化"><a href="#3-二值化" class="headerlink" title="3.二值化"></a>3.二值化</h2><h4 id="固定阈值处理"><a href="#固定阈值处理" class="headerlink" title="固定阈值处理"></a>固定阈值处理</h4><p>适用于光照均匀的图像，处理速度快，适合简单的二值化任务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">_, binary_image = cv2.threshold(median_img,<span class="number">127</span>,<span class="number">255</span>,cv2.THRESH_BINARY)</span><br><span class="line"></span><br><span class="line">//-，表示忽略第一个返回值，只返回第二个，这里第一个为阈值大小，第二个为二值化后的图像</span><br><span class="line">//<span class="number">127</span>为阈值，灰度值低于<span class="number">127</span>的像素将变为<span class="number">0</span>（黑色），高于或等于<span class="number">127</span>的像素变为<span class="number">255</span>（白色）</span><br><span class="line">//<span class="number">255</span>为最大值，超过阈值将被赋予此值</span><br></pre></td></tr></table></figure>
+
+<h4 id="自适应阈值处理"><a href="#自适应阈值处理" class="headerlink" title="自适应阈值处理"></a>自适应阈值处理</h4><p>适用于光照不均匀、存在阴影或渐变光照的图像，可以更好地处理复杂的场景</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">thresholded = cv2.adaptiveThreshold(median_img, <span class="number">255</span>, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY, <span class="number">11</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">//<span class="number">255</span>：二值化结果中超过阈值的像素将设置为<span class="number">255</span></span><br><span class="line">//cv2.ADAPTIVE_THRESH_GAUSSIAN_C：使用高斯加权平均值计算局部阈值</span><br><span class="line">每个像素的阈值是根据其邻域内像素的高斯加权平均值计算的，能够更好地处理有渐变光照的图像</span><br><span class="line">//cv2.THRESH_BINARY阈值类型，这里使用二值</span><br><span class="line">//<span class="number">11</span>:block_size，必须是奇数，表示11x11的邻域用于计算每个像素的局部阈值</span><br><span class="line">//<span class="number">2</span>：该值会从计算出的平均值或加权平均值中减去，用于微调阈值</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-检测图像边缘和轮廓"><a href="#4-检测图像边缘和轮廓" class="headerlink" title="4.检测图像边缘和轮廓"></a>4.检测图像边缘和轮廓</h2><h4 id="Canny边缘检测"><a href="#Canny边缘检测" class="headerlink" title="Canny边缘检测"></a>Canny边缘检测</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cv2.Canny(image,<span class="number">30</span>,<span class="number">150</span>)</span><br><span class="line"></span><br><span class="line">//<span class="number">30</span>为低阈值，<span class="number">150</span>为高阈值，函数通过检测图像中的梯度强度，来识别边缘，低阈值和高阈值用来控制边缘的检测强度，边缘的像素值在这两个阈值之间时，只有当这些像素是从低到高阈值边缘的连接时，才被认为是边缘</span><br></pre></td></tr></table></figure>
+<h4 id="寻找边缘"><a href="#寻找边缘" class="headerlink" title="寻找边缘"></a>寻找边缘</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">contours,_ = cv2.findContours(image.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)</span><br><span class="line"></span><br><span class="line">//cv2.RETR_EXTERNAL: 一种轮廓检索模式，只检索最外层的轮廓</span><br><span class="line">//cv2.CHAIN_APPROX_SIMPLE: 轮廓近似方法，它只保存轮廓的拐点信息，减少内存占用</span><br><span class="line">//该函数检测图像中的轮廓，返回一个列表，其中每个元素都是图像中一个轮廓的点集</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="5-绘制轮廓"><a href="#5-绘制轮廓" class="headerlink" title="5.绘制轮廓"></a>5.绘制轮廓</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cv2.drawContours(solved_img,contours,-<span class="number">1</span>,(<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>),<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">//contours轮廓列表，从findContours函数获取</span><br><span class="line">//-<span class="number">1</span>:指示绘制所有轮廓，如果只想绘制某个特定轮廓，可以指定其索引</span><br><span class="line">//(<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>)：颜色</span><br><span class="line">//<span class="number">3</span>:轮廓线条宽度</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.imshow(<span class="string">&#x27;edges&#x27;</span>,edges)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by weysx, licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+        </div>
+        
+    </div>
+    
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/2024/05/11/AIGC%E5%AF%B9%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93%E7%9A%84%E5%86%B2%E5%87%BB/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">AIGC对数字媒体的冲击</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h2 class="title">Blog</h2>
+                
+                <a href="/" class="item">Blog</a>
+                
+                <a href="/archives" class="item">Archives</a>
+                
+                <a href="/search" class="item">Search</a>
+                
+                <a href="/friends" class="item">Friends</a>
+                
+                <a href="/about" class="item">About</a>
+                
+            </div>
+            
+            <div class="group">
+                <h2 class="title">Me</h2>
+                
+                <a target="_blank" rel="noopener" href="https://github.com/weysx" class="item">GitHub</a>
+                
+                <a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_73241844?spm=1000.2115.3001.5343" class="item">CSDN</a>
+                
+                <a href="mailto:weysx@qq.com" class="item">Email</a>
+                
+            </div>
+            
+        </div>
+        <span>&copy; 2024 weysx<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
